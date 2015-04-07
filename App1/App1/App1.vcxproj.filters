@@ -24,12 +24,18 @@
     <ClCompile Include="calculation.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="GaussSeidelMethod.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="calculation.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussSeidelMethod.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

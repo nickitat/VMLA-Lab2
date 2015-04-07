@@ -65,11 +65,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="calculation.cpp" />
+    <ClCompile Include="GaussSeidelMethod.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="calculation.h" />
+    <ClInclude Include="GaussSeidelMethod.h" />
     <ClInclude Include="matrix.h" />
   </ItemGroup>
   <ItemGroup>
