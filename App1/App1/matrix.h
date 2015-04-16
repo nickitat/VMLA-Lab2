@@ -35,6 +35,7 @@ namespace Garbage {
 		matrix operator+(const matrix& other) const;
 		matrix operator-(const matrix& other) const;
 		matrix operator*(const matrix& other) const;
+		vector<_Type> operator*(vector<_Type>& v) const;
 		matrix operator*(const long double alpha) const;
 
 		friend std::ostream& operator<<(std::ostream& os, const matrix& A);

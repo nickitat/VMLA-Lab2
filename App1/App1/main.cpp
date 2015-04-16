@@ -13,13 +13,8 @@ using namespace Garbage;
 
 #define db(x) cout << #x << '=' << (x) << "\n"
 
-int main() {
-	freopen("output.out", "w", stdout);
-	srand(time(nullptr));
-
-	int n = 3;
-	matrix A(n, n);
-
+void fill_matrix(matrix& A) {
+	int n = A.rows();
 	for (int i = 0; i < n; ++i) {
 		A[0][i] = 1;
 	}
@@ -28,9 +23,20 @@ int main() {
 			A[i][j] = long double(1.0) / long double(i + j + 1);
 		}
 	}
+}
+
+typedef long double ldouble;
+
+int main() {
+	freopen("output.out", "w", stdout);
+	srand(time(nullptr));
+
+	int n = 3;
+	matrix A(n, n);
+
+	fill_matrix(A);
 
 	matrix b(n, 1);
-	vector<long double> x(n, 0);
 	for (int i = 0; i < n; ++i) {
 		b[i][0] = (i & 1) ? -1 : 1;
 	}
@@ -38,43 +44,53 @@ int main() {
 	b = A.transpos() * b;
 	A = A.transpos() * A;
 
-	vector<long double> bb(n);
+	vector<ldouble> bb(n);
 	for (int i = 0; i < n; ++i) {
 		bb[i] = b[i][0];
 	}
 
-	int cnt = 10000;
-	int anscnt = 10000;
-
-	matrix best(n, 1);
-	vector<long double> xi;
-	
-	long double minerr = 1e15;
-	long double ansomega = -1;
-	long double l = 0, r = 2;
-	
-	for (int i = 1; i < cnt; ++i) {
-		int itercnt = 0;
-		long double omega = l + (r - l) * long double(i) / long double(cnt);
-		xi = GaussSeidelMethod::solve(A, x, bb, omega, itercnt);
-		matrix ans(n, 1);
+	int turns_limit = 10;
+	int iter_cnt;
+	int best_iter = 1e9;
+	ldouble l = 0, r = 2;
+	ldouble best_norm = 1e15, best_omega = -1;
+	vector<ldouble> best_sol, x(n, 0), er, solution;
+	for (int i = 1; i < turns_limit; ++i) {
+		iter_cnt = 0;
+		ldouble omega = l + (r - l) / turns_limit;
+		db(omega);
+		solution = GaussSeidelMethod::solve(A, x, bb, omega, iter_cnt);
+		/*if (best_iter > iter_cnt) {
+			best_iter = iter_cnt;
+			best_omega = omega;
+			best_sol = solution;
+		}*/
+		er = A * solution;
+		ldouble norm = 0;
 		for (int j = 0; j < n; ++j) {
-			ans[j][0] = xi[j];
+			norm += (er[j] - bb[j]) * (er[j] - bb[j]);
 		}
-		matrix err = A * ans;
-		long double curerr = 0;
-		for (int j = 0; j < n; ++j) {
-			curerr += (err[j][0] - bb[j]) * (err[j][0] - bb[j]);
-		}
-		if (minerr > curerr) {
-			ansomega = omega;
-			minerr = curerr;
-			best = ans;
-			anscnt = itercnt;
+		if (best_norm > norm) {
+			best_norm = norm;
+			best_omega = omega;
+			best_sol = solution;
 		}
 	}
+	cout << iter_cnt << " " << best_omega << endl;
+	for (int i = 0; i < n; ++i) {
+		cout << best_sol[i] << " " << " ";
+	}
 
-	cout << anscnt << endl;
-	cout << fixed << setprecision(10) << ansomega << " " << minerr << endl;
+	/*int iter_cnt = 0;
+	ldouble omega = 1;
+	vector<ldouble> x(n, 0);
+	vector<ldouble> solution = GaussSeidelMethod::solve(A, x, bb, omega, iter_cnt);
+	
+	vector<ldouble> er = A * solution;
+	cout << fixed << setprecision(10);
+	for (int i = 0; i < n; ++i) {
+		cout << er[i] << "\t" << bb[i] << endl;
+	}*/
+
 	return 0;
 }

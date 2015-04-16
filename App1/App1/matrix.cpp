@@ -121,6 +121,17 @@ namespace Garbage {
 		return Res;
 	}
 
+	vector<matrix::_Type> matrix::operator*(vector<matrix::_Type>& v) const {
+		int n = v.size();
+		vector<_Type> res(n, 0);
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < n; ++j) {
+				res[i] += data[i][j] * v[j];
+			}
+		}
+		return vector<_Type>(res);
+	}
+
 	matrix matrix::operator*(const matrix& other) const {
 		if (m_columns != other.m_rows) {
 			throw std::logic_error("\tmatrix::operator*(const matrix& other) : matrices have an incompatible size.");

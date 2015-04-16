@@ -48,7 +48,7 @@ class GaussSeidelMethod {
 
 public:
 
-	static vector<type> solve(matrix& A, vector<type>& x, vector<type>& b, type omega, int& cntiter, int iteration_limit = 10000) {
+	static vector<type> solve(matrix& A, vector<type>& x, vector<type>& b, type omega, int& cntiter, int iteration_limit = 1000000) {
 		int n = x.size();
 
 		matrix A_inv = get_inverse_matrix(n);
@@ -74,7 +74,7 @@ public:
 			x_prev = x_cur;
 			cntiter++;
 		}
-		return x_cur;
+		return vector<type>(x_cur);
 	}
 
 private:
@@ -99,31 +99,16 @@ private:
 		return sqrt(norm);
 	}
 
-	static bool converged(matrix& A, vector<type>& x, vector<type>& b, type eps = 1e-3) {
-		int n = A.rows();
-		matrix xx(n, 1);
-		for (int i = 0; i < n; ++i) {
-			xx[i][0] = x[i];
-		}
-		matrix ans = A * xx;
-		vector<type> err(n);
-		for (int i = 0; i < n; ++i) {
-			err[i] = ans[i][0] - b[i];
-		}
-		return norm(err) < eps;
-	}
-
-	static bool converged(matrix& A, type A_inv_norm, vector<type>& x_cur, vector<type>& b, type eps = 1e-5) {
+	static bool converged(matrix& A, type A_inv_norm, vector<type>& x_cur, vector<type>& b, type eps = 1e-8) {
 		int n = x_cur.size();
-		matrix xx(n, 1), bb(n, 1);
+		vector<type> r(n);
 		for (int i = 0; i < n; ++i) {
-			xx[i][0] = x_cur[i];
-			bb[i][0] = -b[i];
+			r[i] = -b[i];
+			for (int j = 0; j < n; ++j) {
+				r[i] += A[i][j] * x_cur[j];
+			}
 		}
-		matrix R = (A * xx);
-		matrix P = R + bb;
-		type nnorm = norm(P);
-		//db(nnorm);
+		type nnorm = norm(r);
 		return nnorm * A_inv_norm < eps;
 	}
 };
