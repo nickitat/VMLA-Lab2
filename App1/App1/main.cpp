@@ -49,48 +49,48 @@ int main() {
 		bb[i] = b[i][0];
 	}
 
-	int turns_limit = 10;
-	int iter_cnt;
-	int best_iter = 1e9;
-	ldouble l = 0, r = 2;
-	ldouble best_norm = 1e15, best_omega = -1;
-	vector<ldouble> best_sol, x(n, 0), er, solution;
-	for (int i = 1; i < turns_limit; ++i) {
-		iter_cnt = 0;
-		ldouble omega = l + (r - l) / turns_limit;
-		db(omega);
-		solution = GaussSeidelMethod::solve(A, x, bb, omega, iter_cnt);
-		/*if (best_iter > iter_cnt) {
-			best_iter = iter_cnt;
-			best_omega = omega;
-			best_sol = solution;
-		}*/
-		er = A * solution;
-		ldouble norm = 0;
-		for (int j = 0; j < n; ++j) {
-			norm += (er[j] - bb[j]) * (er[j] - bb[j]);
-		}
-		if (best_norm > norm) {
-			best_norm = norm;
-			best_omega = omega;
-			best_sol = solution;
-		}
-	}
-	cout << iter_cnt << " " << best_omega << endl;
-	for (int i = 0; i < n; ++i) {
-		cout << best_sol[i] << " " << " ";
-	}
+	//int turns_limit = 100;
+	//int iter_cnt;
+	//int best_iter = 1e9;
+	//ldouble l = 1.9, r = 2;
+	//ldouble best_norm = 1e15, best_omega = -1;
+	//vector<ldouble> best_sol, x(n, 0), er, solution;
+	//for (int i = 1; i < turns_limit; ++i) {
+	//	iter_cnt = 0;
+	//	ldouble omega = l + i*(r - l) / turns_limit;
+	//	solution = GaussSeidelMethod::solve(A, x, bb, omega, iter_cnt);
+	//	if (best_iter > iter_cnt) {
+	//		best_iter = iter_cnt;
+	//		best_omega = omega;
+	//		best_sol = solution;
+	//	}
+	//	/*er = A * solution;
+	//	ldouble norm = 0;
+	//	for (int j = 0; j < n; ++j) {
+	//	norm += (er[j] - bb[j]) * (er[j] - bb[j]);
+	//	}
+	//	if (best_norm > norm) {
+	//	best_norm = norm;
+	//	best_omega = omega;
+	//	best_sol = solution;
+	//	}*/
+	//}
+	////cout << iter_cnt << " " << best_omega << endl;
+	//cout << best_iter << " " << best_omega << endl;
+	//for (int i = 0; i < n; ++i) {
+	//	cout << best_sol[i] << endl;
+	//}
 
-	/*int iter_cnt = 0;
-	ldouble omega = 1;
+	int iter_cnt = 0;
+	ldouble omega = 1.955;
 	vector<ldouble> x(n, 0);
 	vector<ldouble> solution = GaussSeidelMethod::solve(A, x, bb, omega, iter_cnt);
-	
+
 	vector<ldouble> er = A * solution;
 	cout << fixed << setprecision(10);
 	for (int i = 0; i < n; ++i) {
 		cout << er[i] << "\t" << bb[i] << endl;
-	}*/
+	}
 
 	return 0;
 }

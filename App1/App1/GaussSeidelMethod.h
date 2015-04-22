@@ -48,7 +48,7 @@ class GaussSeidelMethod {
 
 public:
 
-	static vector<type> solve(matrix& A, vector<type>& x, vector<type>& b, type omega, int& cntiter, int iteration_limit = 1000000) {
+	static vector<type> solve(const matrix& A, const vector<type>& x, const vector<type>& b, type omega, int& cntiter, int iteration_limit = 50000000) {
 		int n = x.size();
 
 		matrix A_inv = get_inverse_matrix(n);
@@ -58,23 +58,23 @@ public:
 		vector<type> x_prev = x, x_cur(n);
 		for (int it = 0; it < iteration_limit; ++it) {
 			for (int i = 0; i < n; ++i) {
-				type new_component = (1 - omega) * x_prev[i] + (omega)* b[i];
+				type new_component = (omega)* b[i];
 				for (int j = 0; j < i; ++j) {
 					new_component -= A[i][j] * (omega)* x_cur[j];
 				}
 				for (int j = i + 1; j < n; ++j) {
 					new_component -= A[i][j] * (omega)* x_prev[j];
 				}
-				x_cur[i] = new_component / A[i][i];
+				x_cur[i] = new_component / A[i][i] + (1.0 - omega) * x_prev[i];
 			}
 			if (converged(A, A_inv_norm, x_cur, b)) {
 				db(it);
 				break;
 			}
-			x_prev = x_cur;
+			x_prev = vector<type>(x_cur);
 			cntiter++;
 		}
-		return vector<type>(x_cur);
+		return x_cur;
 	}
 
 private:
@@ -99,7 +99,7 @@ private:
 		return sqrt(norm);
 	}
 
-	static bool converged(matrix& A, type A_inv_norm, vector<type>& x_cur, vector<type>& b, type eps = 1e-8) {
+	static bool converged(const matrix& A, type A_inv_norm, const vector<type>& x_cur, const vector<type>& b, type eps = 1e-8) {
 		int n = x_cur.size();
 		vector<type> r(n);
 		for (int i = 0; i < n; ++i) {
